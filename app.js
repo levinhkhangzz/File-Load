@@ -16,24 +16,12 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const storage = firebase.storage();
 
-let randomFilename; // Store the random filename globally
-
-function generateRandomFilename() {
-  const getRandomString = () => Math.random().toString(36).substr(2, 5);
-  return `${getRandomString()}-${getRandomString()}-${getRandomString()}`;
-}
-
 function uploadFile() {
   const fileInput = document.getElementById('fileInput');
   const file = fileInput.files[0];
 
   if (file) {
-    // Generate a random filename with the original file extension
-    const originalFilename = file.name;
-    const fileExtension = originalFilename.split('.').pop();
-    randomFilename = generateRandomFilename() + '.' + fileExtension;
-
-    const storageRef = storage.ref(`uploads/${randomFilename}`);
+    const storageRef = storage.ref(`uploads/${file.name}`);
     
     // Set the content type based on the file type
     const contentType = file.type;
@@ -63,17 +51,22 @@ function uploadFile() {
 
 function downloadFile() {
   // Get the download URL
-  const storageRef = storage.ref(`uploads/${randomFilename}`);
-  storageRef.getDownloadURL().then((downloadURL) => {
-    // Create a hidden link and trigger the click event
-    const link = document.createElement('a');
-    link.href = downloadURL;
-    link.download = randomFilename;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
+  const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];
+
+  if (file) {
+    const storageRef = storage.ref(`uploads/${file.name}`);
+    storageRef.getDownloadURL().then((downloadURL) => {
+      // Create a hidden link and trigger the click event
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = file.name;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }
 }
 
 function resetUpload() {
