@@ -1,0 +1,17 @@
+{
+    "name": "your-project-name",
+    "version": "1.0.0",
+    "description": "Description of your project",
+    "main": "app.js",
+    "scripts": {
+      "start": "node app.js"
+    },
+    "dependencies": {
+      "dotenv": "^10.0.0",
+      "firebase": "^8.0.0"
+    },
+    "devDependencies": {
+      "http-server": "^0.12.3"
+    }
+  }
+  
