@@ -5,7 +5,7 @@ require('firebase/database'); // Add this line for Realtime Database
 const fs = require('fs');
 
 // Load Firebase configuration from the JSON file
-const firebaseConfigJson = fs.readFileSync('firebase-config.json');
+const firebaseConfigJson = fs.readFileSync('config.json');
 const firebaseConfig = JSON.parse(firebaseConfigJson);
 
 firebase.initializeApp(firebaseConfig);
@@ -14,20 +14,12 @@ console.log('Firebase initialized successfully');
 const storage = firebase.storage();
 const database = firebase.database(); // Initialize Realtime Database
 
-let randomFilename;
-
-function generateRandomFilename() {
-  const getRandomString = () => Math.random().toString(36).substr(2, 5);
-  return `${getRandomString()}-${getRandomString()}-${getRandomString()}`;
-}
-
 function uploadFile() {
   const fileInput = document.getElementById('fileInput');
   const file = fileInput.files[0];
 
   if (file) {
-    randomFilename = generateRandomFilename();
-    const storageRef = storage.ref(`uploads/${randomFilename}`);
+    const storageRef = storage.ref(`uploads/${file.name}`);
     
     const uploadTask = storageRef.put(file);
 
@@ -50,7 +42,7 @@ function uploadFile() {
 
         // Store file information in Realtime Database
         database.ref('uploads').push({
-          filename: randomFilename,
+          filename: file.name,
           timestamp: firebase.database.ServerValue.TIMESTAMP
         });
       }
@@ -59,17 +51,22 @@ function uploadFile() {
 }
 
 function downloadFile() {
-  const storageRef = storage.ref(`uploads/${randomFilename}`);
-  storageRef.getDownloadURL().then((downloadURL) => {
-    // Create a hidden link and trigger the click event
-    const link = document.createElement('a');
-    link.href = downloadURL;
-    link.download = randomFilename;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
+  const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];
+
+  if (file) {
+    const storageRef = storage.ref(`uploads/${file.name}`);
+    storageRef.getDownloadURL().then((downloadURL) => {
+      // Create a hidden link and trigger the click event
+      const link = document.createElement('a');
+      link.href = downloadURL;
+      link.download = file.name;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }
 }
 
 function resetUpload() {
