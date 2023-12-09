@@ -8,18 +8,15 @@
   <title>File Upload</title>
 </head>
 <body>
-  <div class="container">
-    <h1>File Upload</h1>
-    <input type="file" id="fileInput" />
-    <button onclick="uploadFile()">Upload</button>
-    <progress value="0" max="100" id="uploader">0%</progress>
+  <input type="file" id="fileInput" />
+  <button onclick="uploadFile()">Upload</button>
+  <progress value="0" max="100" id="uploader">0%</progress>
 
-    <!-- Displayed when upload is successful -->
-    <div id="successSection">
-      <button onclick="downloadFile()">Download File</button>
-      <button onclick="resetUpload()">Reset</button>
-      <p id="fileLink"></p>
-    </div>
+  <!-- Displayed when upload is successful -->
+  <div id="successSection" style="display: none;">
+    <button onclick="downloadFile()">Download File</button>
+    <button onclick="resetUpload()">Reset</button>
+    <p id="fileLink"></p>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js"></script>
